@@ -1,0 +1,33 @@
+type Movie @model {
+  id: ID!
+  name: String!
+  actors: [MovieActor] @connection(keyName: "byActor", fields: ["id"])
+  director: Director @connection(name: "MovieDirector")
+}
+
+##MANY TO MANY CONNECTION FOR MOVIE AND ACTOR
+type MovieActor
+  @model(queries: null)
+  @key(name: "byMovie", fields: ["movieID", "actorID"])
+  @key(name: "byActor", fields: ["actorID", "movieID"]) {
+  id: ID!
+  movieID: ID!
+  actorID: ID!
+  movie: Movie! @connection(fields: ["movieID"])
+  actor: Actor! @connection(fields: ["actorID"])
+}
+
+
+type Actor @model {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  movies: [MovieActor] @connection(keyName: "byMovie", fields: ["id"])
+}
+type Director @model {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  movies: [Movie] @connection(name: "MovieDirector")
+}
+
